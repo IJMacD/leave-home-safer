@@ -6,7 +6,7 @@ import './App.css';
 function App() {
   const [ result, setResult ] = useState(null);
   const [ scanning, setScanning ] = useState(true);
-  const [ facingMode, setFacingMode ] = useState("rear");
+  const [ facingMode, setFacingMode ] = useState("environment");
 
   function onScan (result) {
     if (result) {
@@ -24,12 +24,11 @@ function App() {
     <div className="App">
       { scanning && <div style={{ display: "flex", flexDirection: "column" }}>
           <QrReader
-            delay={100}
             onError={console.log}
             onScan={onScan}
-            facingMode={facingMode}
+            constraints={{ video: { facingMode } }}
           />
-          <button onClick={() => setFacingMode(facingMode === "front" ? "rear" : "front")}>Flip Camera</button>
+          <button onClick={() => setFacingMode(facingMode === "user" ? "environment" : "user")}>Flip Camera</button>
         </div>
       }
       { result && <Decoder data={result.text} /> }
