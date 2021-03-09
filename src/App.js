@@ -1,23 +1,40 @@
-import logo from './logo.svg';
+import  { useState } from 'react';
+import QrReader from 'react-qr-scanner';
+import Decoder from './Decoder';
 import './App.css';
 
 function App() {
+  const [ result, setResult ] = useState(null);
+  const [ scanning, setScanning ] = useState(true);
+
+  function onScan (result) {
+    if (result) {
+      setResult(result);
+      setScanning(false);
+    }
+  }
+
+  function onReset () {
+    setResult(null);
+    setScanning(true);
+  }
+
+  const previewStyle = {
+    height: 240,
+    width: 320,
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      { scanning && <QrReader
+          delay={100}
+          style={previewStyle}
+          onError={console.log}
+          onScan={onScan}
+        />
+      }
+      { result && <Decoder data={result.text} /> }
+      { !scanning && <button onClick={onReset}>Scan Again</button> }
     </div>
   );
 }
